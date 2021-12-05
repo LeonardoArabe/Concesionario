@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Data.SqlClient;
 
 namespace DBConnectV2
@@ -70,8 +70,8 @@ namespace DBConnectV2
             try
             {
                 Console.WriteLine("Abrimos la conexi�n ...");
-                conn.Open();
-                Console.WriteLine("Connexion exitosa");
+                //conn.Open();
+                //Console.WriteLine("Connexion exitosa");
 
             }
             catch (Exception e)
