@@ -12,8 +12,8 @@ namespace DBConnectV2
         static void Main(string[] args)
         {
             Conectar();
-
             MostrarOpciones();
+
 
             Console.WriteLine("**-----------------------------FIN--------------------------------**");
             Console.ReadKey();
@@ -21,125 +21,66 @@ namespace DBConnectV2
 
         private static void MostrarOpciones()
         {
-            Console.WriteLine("------------------------Opciones---------------------------");
-            Console.WriteLine("1. Registrar cliente");
-            Console.WriteLine("2. Registrar vehiculo");
-            Console.WriteLine("3. Asignar mecanico");
-            Console.WriteLine("4. Asignar ayudantes");
-            Console.WriteLine("5. Ver repuestos e insumos");
-            Console.WriteLine("6. Generar factura");
-            Console.WriteLine("*. Salir");
-            Console.WriteLine("------------------------Seleccione una opcion---------------------------");
-            string opcion = Console.ReadLine();
-            if (opcion == "1")
+            string opcion = "1";
+            do
             {
-                MostrarMenu1();
-            }
-            else if (opcion == "2")
-            {
-                MostrarMenu2();
-            }
-            else
-            {
-                Console.WriteLine("Saliendo");
-            }
+                Console.Clear();
+                Console.WriteLine("------------------------Opciones---------------------------");
+                Console.WriteLine("1. Mostrar Personas");
+                Console.WriteLine("2. Mostrar Vehículos");
+                Console.WriteLine("3. Insertar Personas");
+                Console.WriteLine("4. Insertar Vehiculos");
+                Console.WriteLine("5. Ver repuestos e insumos");
+                Console.WriteLine("6. Generar factura");
+                Console.WriteLine("*. Salir");
+                Console.WriteLine("------------------------Seleccione una opcion---------------------------");
+                opcion = Console.ReadLine();
+                if (opcion == "1")
+                {
+                    MostrarPersonas();
+                }
+                else if (opcion == "2")
+                {
+                    MostrarVehiculos();
+                }
+                else if (opcion == "3")
+                {
+                    MostrarPersonas();
+                    InsertarPersonas();
+                }
+                else if (opcion == "4")
+                {
+                    MostrarPersonas();
+                    MostrarVehiculos();
+                    InsertarVehiculos();
+                }
+                else
+                {
+                    Console.WriteLine("Saliendo");
+                }
+            } while (opcion != "*");
         }
 
         private static void Conectar()
         {
             Console.WriteLine("Interactuando con la BD desde la consola");
             string connString = "Data Source=LAPTOP-EN8N3AD0\\MSSQLSERVER02;Initial Catalog=Concesionario;Integrated Security=True; trustServerCertificate=True";
-            //            string connString = "Data Source = V-W7-DES; Initial Catalog = ConcesionariosVeh; User ID = PracticaConn; Password = PracticaConn";
-            //conn = new SqlConnection(connString);
+
+            conn = new SqlConnection(connString);
             try
             {
                 Console.WriteLine("Abrimos la conexi�n ...");
-                //conn.Open();
-                //Console.WriteLine("Connexion exitosa");
+                conn.Open();
+                Console.WriteLine("Connexion exitosa");
 
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Error: " + e.Message);
-                //Environment.Exit(0);
+                Console.WriteLine("Error: " + e.Message);
+                Environment.Exit(0);
                 Console.WriteLine("Connexion fallida");
             }
         }
-
-        private static void MostrarMenu1()
-        {
-            Console.WriteLine("------------------------Menu 1---------------------------");
-            Console.WriteLine("Ingresar codigo cliente");
-            string codigoCliente = Console.ReadLine();
-            Console.WriteLine("Ingresar vehiculo");
-            string vehiculo = Console.ReadLine();
-            Console.WriteLine("Ingresar CI");
-            string ci = Console.ReadLine();
-            Console.WriteLine("Ingresar Telefono");
-            string telefono = Console.ReadLine();
-            Console.WriteLine("Ingresar Direccion");
-            string direccion = Console.ReadLine();
-            Console.WriteLine("Ingresar Nombre");
-            string nombre = Console.ReadLine();
-            // ...
-
-            comando.Dispose();
-            Console.WriteLine("Insertando informacion en la base de datos...");
-            try
-            {
-                comando.CommandText =
-                    "insert into Clientes values (" +
-                    "'" + codigoCliente + "', " +
-                    "'" + direccion + "', " +
-                    "'" + nombre + "')";
-                comando.ExecuteNonQuery();
-                Console.WriteLine("Se guardaron los datos");
-                ejecutor.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-                Environment.Exit(0);
-            }
-        }
-
-        private static void MostrarMenu2()
-        {
-            Console.WriteLine("------------------------Menu 2--------------------------");
-            Console.WriteLine("Ingresar codigo vehiculo");
-            string codigoVehiculo = Console.ReadLine();
-            Console.WriteLine("Ingresar Matricula");
-            string matricula = Console.ReadLine();
-            Console.WriteLine("Ingresar Modelo");
-            string modelo = Console.ReadLine();
-            Console.WriteLine("Ingresar Color");
-            string color = Console.ReadLine();
-            Console.WriteLine("Ingresar Fecha de Ingreso");
-            string fechaingreso = Console.ReadLine();
-            Console.WriteLine("Ingresar Hora de Ingreso");
-            string horaingreso = Console.ReadLine();
-            // ...
-
-            comando.Dispose();
-            Console.WriteLine("Insertando informacion en la base de datos...");
-            try
-            {
-                comando.CommandText =
-                    "insert into Clientes values (" +
-                    "'" + codigoCliente + "', " +
-                    "'" + direccion + "', " +
-                    "'" + nombre + "')";
-                comando.ExecuteNonQuery();
-                Console.WriteLine("Se guardaron los datos");
-                ejecutor.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-                Environment.Exit(0);
-            }
-        }
-
         private static void CuartoEjercicio()
         {
             comando.Dispose();
@@ -170,13 +111,65 @@ namespace DBConnectV2
             Console.ReadKey();
         }
 
-        private static void SegundoEjercicio()
+
+        private static void MostrarPersonas()
+        {
+            /*CodCliente char(10) not null,
+            Vehiculo  varchar(30) not null,
+            CI nchar(10) not null,
+            Telefono nchar(10) not null,
+            Dirección varchar(50) not null,
+            Nombre varchar(30) not null,
+            Apellido varchar(30) not null,*/
+            comando = new SqlCommand("select * from Clientes", conn);
+            ejecutor = comando.ExecuteReader();
+            while (ejecutor.Read())
+            {
+                Console.WriteLine(
+                    ejecutor["CodCliente"] + " | " +
+                    ejecutor["Vehiculo"] + " | " +
+                    ejecutor["CI"] + " | " +
+                    ejecutor["Telefono"] + " | " +
+                    ejecutor["Dirección"] + " | " +
+                    ejecutor["Nombre"] + " | " +
+                    ejecutor["Apellido"]
+                    );
+            }
+            Console.WriteLine("**_______________________**");
+            Console.ReadKey();
+            ejecutor.Close();
+        }
+        private static void InsertarPersonas()
         {
             comando.Dispose();
-            Console.WriteLine("Ejecutamos un segundo comando SQL directamente (insert)");
             try
             {
-                comando.CommandText = "insert into Vendedores values ('7894565', 'Av. Perimetral esq. Transversal 1', 'Leonardo Arabe', '3457896', '0000', '0000')";
+                Console.WriteLine("------------------------Insertar Personas--------------------------");
+                Console.WriteLine("Ingresar Código del Cliente");
+                string CodCliente = Console.ReadLine();
+                Console.WriteLine("Ingresar vehiculo");
+                string Vehiculo = Console.ReadLine();
+                Console.WriteLine("Ingresar CI");
+                string CI = Console.ReadLine();
+                Console.WriteLine("Ingresar Telefono");
+                string Telefono = Console.ReadLine();
+                Console.WriteLine("Ingresar Direccion");
+                string Direccion = Console.ReadLine();
+                Console.WriteLine("Ingresar Nombre");
+                string Nombre = Console.ReadLine();
+                Console.WriteLine("Ingresar Apellido");
+                string Apellido = Console.ReadLine();
+
+                // ...
+                comando.CommandText = "insert into Clientes values ('" +
+                    CodCliente + "','" +
+                    Vehiculo + "', '" +
+                    CI + "', '" +
+                    Telefono + "', '" +
+                    Direccion + "', '" +
+                    Nombre + "', '" +
+                    Apellido + "')";
+
                 comando.ExecuteNonQuery();
                 Console.WriteLine("**_______________________**");
                 Console.ReadKey();
@@ -189,19 +182,58 @@ namespace DBConnectV2
             }
         }
 
-        private static void PrimerEjercicio()
+        private static void MostrarVehiculos()
         {
-            Console.WriteLine("Ejecutamos un comando SQL directamente");
-            comando = new SqlCommand("select * from Vendedores", conn);
+            comando = new SqlCommand("select * from Vehiculo", conn);
             ejecutor = comando.ExecuteReader();
             while (ejecutor.Read())
             {
-                Console.WriteLine(ejecutor["CI"] + " | " + ejecutor["Nombre"] + " | " + ejecutor["Telefono"]);
+                Console.WriteLine(
+                    ejecutor["CodVehiculo"] + " | " +
+                    ejecutor["CodCliente"] + " | " +
+                    ejecutor["Matricula"] + " | " +
+                    ejecutor["Modelo"] + " | " +
+                    ejecutor["Color"]
+                    );
             }
             Console.WriteLine("**_______________________**");
             Console.ReadKey();
             ejecutor.Close();
         }
-    }
+        private static void InsertarVehiculos()
+        {
+            comando.Dispose();
+            try
+            {
+                Console.WriteLine("------------------------Insertar Vehiculos--------------------------");
+                Console.WriteLine("Ingresar Codigo del Vehiculo");
+                string CodVehiculo = Console.ReadLine();
+                Console.WriteLine("Ingresar Codigo del Cliente");
+                string CodCliente = Console.ReadLine();
+                Console.WriteLine("Ingresar Matricula");
+                string Matricula = Console.ReadLine();
+                Console.WriteLine("Ingresar Modelo");
+                string Modelo = Console.ReadLine();
+                Console.WriteLine("Ingresar Color");
+                string Color = Console.ReadLine();
+                // ...
+                comando.CommandText = "insert into Vehiculo values ('" +
+                    CodVehiculo + "','" +
+                    CodCliente + "', '" +
+                    Matricula + "', '" +
+                    Modelo + "', '" +
+                    Color + "')";
 
+                comando.ExecuteNonQuery();
+                Console.WriteLine("**_______________________**");
+                Console.ReadKey();
+                ejecutor.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+                Environment.Exit(0);
+            }
+        }
+    }
 }
