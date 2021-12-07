@@ -28,10 +28,17 @@ namespace DBConnectV2
                 Console.WriteLine("------------------------Opciones---------------------------");
                 Console.WriteLine("1. Mostrar Personas");
                 Console.WriteLine("2. Mostrar Vehículos");
-                Console.WriteLine("3. Insertar Personas");
-                Console.WriteLine("4. Insertar Vehiculos");
-                Console.WriteLine("5. Ver repuestos e insumos");
-                Console.WriteLine("6. Generar factura");
+                Console.WriteLine("3. Mostrar Mecánicos");
+                Console.WriteLine("4. Mostrar Hoja de Parte");
+                Console.WriteLine("5. Mostrar Respuestos, Materiales e Insumos");
+                Console.WriteLine("6. Mostrar Ayudantes");
+                Console.WriteLine("7. Insertar Personas");
+                Console.WriteLine("8. Insertar Vehiculos");
+                Console.WriteLine("9. Insertar Mecánicos");
+                Console.WriteLine("10. Insertar Hoja de Parte");
+                Console.WriteLine("11. Insertar Repuestos, Materiales e Insumos");
+                Console.WriteLine("12. Insertar Ayudantes");
+                Console.WriteLine("13. Generar Factura");
                 Console.WriteLine("*. Salir");
                 Console.WriteLine("------------------------Seleccione una opcion---------------------------");
                 opcion = Console.ReadLine();
@@ -45,14 +52,56 @@ namespace DBConnectV2
                 }
                 else if (opcion == "3")
                 {
-                    MostrarPersonas();
-                    InsertarPersonas();
+                    MostrarMecanicos();
                 }
                 else if (opcion == "4")
                 {
+                    MostrarHojadeParte();
+                }
+                else if (opcion == "5")
+                {
+                    MostrarRepuestosInsumosMateriales();
+                }
+                else if (opcion == "6")
+                {
+                    MostrarAyudantes();
+                }
+                else if (opcion == "7")
+                {
                     MostrarPersonas();
-                    MostrarVehiculos();
+                    InsertarPersonas();
+                }
+                else if (opcion == "8")
+                {
+                    MostrarPersonas();
                     InsertarVehiculos();
+                }
+                else if (opcion == "9")
+                {
+                    MostrarVehiculos();
+                    InsertarMecanicos();
+                }
+                else if (opcion == "10")
+                {
+                    MostrarVehiculos();
+                    MostrarMecanicos();
+                    InsertarHojadeParte();
+                }
+                else if (opcion == "11")
+                {
+                    MostrarHojadeParte();
+                    InsertarRepuestosInsumosMateriales();
+                }
+                else if (opcion == "12")
+                {
+                    MostrarMecanicos();
+                    InsertarAyudantes();
+                }
+                else if (opcion == "13")
+                {
+                    MostrarHojadeParte();
+                    GenerarFacturas();
+                    MostrarFacturas();
                 }
                 else
                 {
@@ -70,8 +119,8 @@ namespace DBConnectV2
             try
             {
                 Console.WriteLine("Abrimos la conexi�n ...");
-                //conn.Open();
-                //Console.WriteLine("Connexion exitosa");
+                conn.Open();
+          
 
             }
             catch (Exception e)
@@ -114,13 +163,6 @@ namespace DBConnectV2
 
         private static void MostrarPersonas()
         {
-            /*CodCliente char(10) not null,
-            Vehiculo  varchar(30) not null,
-            CI nchar(10) not null,
-            Telefono nchar(10) not null,
-            Dirección varchar(50) not null,
-            Nombre varchar(30) not null,
-            Apellido varchar(30) not null,*/
             comando = new SqlCommand("select * from Clientes", conn);
             ejecutor = comando.ExecuteReader();
             while (ejecutor.Read())
@@ -141,7 +183,7 @@ namespace DBConnectV2
         }
         private static void InsertarPersonas()
         {
-            comando.Dispose();
+           // comando.Dispose();
             try
             {
                 Console.WriteLine("------------------------Insertar Personas--------------------------");
@@ -234,6 +276,254 @@ namespace DBConnectV2
                 Console.WriteLine("Error: " + e.Message);
                 Environment.Exit(0);
             }
+        }
+        private static void MostrarMecanicos()
+        {
+            comando = new SqlCommand("select * from Mecanicos", conn);
+            ejecutor = comando.ExecuteReader();
+            while (ejecutor.Read())
+            {
+                Console.WriteLine(
+                    ejecutor["CodMecanico"] + " | " +
+                    ejecutor["CodVehiculo"] + " | " +
+                    ejecutor["Nombre"] + " | " +
+                    ejecutor["Apellido"] + " | " +
+                    ejecutor["Estado"]
+                    );
+            }
+            Console.WriteLine("**_______________________**");
+            Console.ReadKey();
+            ejecutor.Close();
+        }
+        private static void InsertarMecanicos()
+        {
+            comando.Dispose();
+            try
+            {
+                Console.WriteLine("------------------------Insertar Mecanicos--------------------------");
+                Console.WriteLine("Ingresar Codigo del Mecanico");
+                string CodMecanico = Console.ReadLine();
+                Console.WriteLine("Ingresar Codigo del Vehiculo");
+                string CodVehiculo = Console.ReadLine();
+                Console.WriteLine("Ingresar Nombre");
+                string Nombre = Console.ReadLine();
+                Console.WriteLine("Ingresar Apellido");
+                string Apellido = Console.ReadLine();
+                Console.WriteLine("Ingresar Estado");
+                string Estado = Console.ReadLine();
+                // ...
+                comando.CommandText = "insert into Mecanicos values ('" +
+                    CodMecanico + "','" +
+                    CodVehiculo + "', '" +
+                    Nombre + "', '" +
+                    Apellido + "', '" +
+                    Estado + "')";
+
+                comando.ExecuteNonQuery();
+                Console.WriteLine("**_______________________**");
+                Console.ReadKey();
+                ejecutor.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+                Environment.Exit(0);
+            }
+        }
+        private static void MostrarHojadeParte()
+        {
+            comando = new SqlCommand("select * from HojadeParte", conn);
+            ejecutor = comando.ExecuteReader();
+            while (ejecutor.Read())
+            {
+                Console.WriteLine(
+                    ejecutor["CodHoja"] + " | " +
+                    ejecutor["CodVehiculo"] + " | " +
+                    ejecutor["CodMecanico"] + " | " +
+                    ejecutor["FechaIngreso"] + " | " +
+                    ejecutor["HoraIngreso"] + " | " +
+                    ejecutor["Manodeobra"]
+                    );
+            }
+            Console.WriteLine("**_______________________**");
+            Console.ReadKey();
+            ejecutor.Close();
+        }
+        private static void InsertarHojadeParte()
+        {
+            comando.Dispose();
+            try
+            {
+                Console.WriteLine("------------------------Insertar Hoja de Parte--------------------------");
+                Console.WriteLine("Ingresar Codigo de la Hoja de Parte");
+                string CodHoja = Console.ReadLine();
+                Console.WriteLine("Ingresar Codigo del Vehiculo");
+                string CodVehiculo = Console.ReadLine();
+                Console.WriteLine("Ingresar Codigo del Mecanico");
+                string CodMecanico = Console.ReadLine();
+                Console.WriteLine("Ingresar Fecha de Ingreso");
+                string FechaIngreso = Console.ReadLine();
+                Console.WriteLine("Ingresar Hora de Ingreso");
+                string HoraIngreso = Console.ReadLine();
+                Console.WriteLine("Ingresar monto de la Mano de Obra");
+                string Manodeobra = Console.ReadLine();
+                // ...
+                comando.CommandText = "insert into HojadeParte values ('" +
+                    CodHoja + "','" +
+                    CodVehiculo + "','" +
+                    CodMecanico + "', '" +
+                    FechaIngreso + "', '" +
+                    HoraIngreso + "', '" +
+                    Manodeobra + "')";
+
+                comando.ExecuteNonQuery();
+                Console.WriteLine("**_______________________**");
+                Console.ReadKey();
+                ejecutor.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+                Environment.Exit(0);
+            }
+        }
+        private static void MostrarRepuestosInsumosMateriales()
+        {
+            comando = new SqlCommand("select * from Repuestos_Insumos_Materiales", conn);
+            ejecutor = comando.ExecuteReader();
+            while (ejecutor.Read())
+            {
+                Console.WriteLine(
+                    ejecutor["CodRep_Ins_Mat"] + " | " +
+                    ejecutor["CodHoja"] + " | " +
+                    ejecutor["Nombre"] + " | " +
+                    ejecutor["Precio"] 
+                    );
+            }
+            Console.WriteLine("**_______________________**");
+            Console.ReadKey();
+            ejecutor.Close();
+        }
+        private static void InsertarRepuestosInsumosMateriales()
+        {
+            comando.Dispose();
+            try
+            {
+                Console.WriteLine("------------------------Insertar Repuestos, Materiales e Insumos--------------------------");
+                Console.WriteLine("Ingresar Codigo de los Repuestos, Materiales e Insumos");
+                string CodRep_Ins_Mat = Console.ReadLine();
+                Console.WriteLine("Ingresar Codigo de la Hoja de Parte");
+                string CodHoja = Console.ReadLine();
+                Console.WriteLine("Ingresar el Nombre");
+                string Nombre = Console.ReadLine();
+                Console.WriteLine("Ingresar Precio");
+                string Precio = Console.ReadLine();
+                // ...
+                comando.CommandText = "insert into Repuestos_Insumos_Materiales values ('" +
+                    CodRep_Ins_Mat + "','" +
+                    CodHoja + "','" +
+                    Nombre + "', '" +
+                    Precio + "')";
+
+                comando.ExecuteNonQuery();
+                Console.WriteLine("**_______________________**");
+                Console.ReadKey();
+                ejecutor.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+                Environment.Exit(0);
+            }
+        }
+        private static void MostrarAyudantes()
+        {
+            comando = new SqlCommand("select * from Ayudantes", conn);
+            ejecutor = comando.ExecuteReader();
+            while (ejecutor.Read())
+            {
+                Console.WriteLine(
+                    ejecutor["CodAyudante"] + " | " +
+                    ejecutor["CodMecanico"] + " | " +
+                    ejecutor["Nombre"] + " | " +
+                    ejecutor["Apellido"]
+                    );
+            }
+            Console.WriteLine("**_______________________**");
+            Console.ReadKey();
+            ejecutor.Close();
+        }
+        private static void InsertarAyudantes()
+        {
+            comando.Dispose();
+            try
+            {
+                Console.WriteLine("------------------------Insertar Ayudantes--------------------------");
+                Console.WriteLine("Ingresar Codigo del Ayudante");
+                string CodAyudante = Console.ReadLine();
+                Console.WriteLine("Ingresar Codigo del Mecanico");
+                string CodMecanico = Console.ReadLine();
+                Console.WriteLine("Ingresar el Nombre");
+                string Nombre = Console.ReadLine();
+                Console.WriteLine("Ingresar Apellido");
+                string Apellido = Console.ReadLine();
+                // ...
+                comando.CommandText = "insert into Ayudantes values ('" +
+                    CodAyudante + "','" +
+                    CodMecanico + "','" +
+                    Nombre + "', '" +
+                    Apellido + "')";
+
+                comando.ExecuteNonQuery();
+                Console.WriteLine("**_______________________**");
+                Console.ReadKey();
+                ejecutor.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e.Message);
+                Environment.Exit(0);
+            }
+        }
+        private static void GenerarFacturas()
+        {
+            Console.WriteLine("Ingresar código de la factura");
+            string CodFactura = Console.ReadLine();
+            Console.WriteLine("Ingresar código de la Hoja de Parte");
+            string CodHoja = Console.ReadLine();
+            Console.WriteLine("Ingresar a que nombre estará la factura");
+            string Nombre = Console.ReadLine();
+            Console.WriteLine("Ingresar número de NIT");
+            string Nit_Fac = Console.ReadLine();
+
+            comando.Dispose();
+            ejecutor.Close();
+            comando.CommandText = "Generar_Factura";
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.Parameters.AddWithValue("@CodFactura", CodFactura);
+            comando.Parameters.AddWithValue("@CodHoja", CodHoja);
+            comando.Parameters.AddWithValue("@Nombre", Nombre);
+            comando.Parameters.AddWithValue("@Nit_Fac", Nit_Fac);
+            comando.ExecuteNonQuery();
+            Console.WriteLine("Factura generada correctamente");
+        }
+        private static void MostrarFacturas()
+        {
+            comando = new SqlCommand("select * from Facturas", conn);
+            ejecutor = comando.ExecuteReader();
+            while (ejecutor.Read())
+            {
+                Console.WriteLine(
+                    ejecutor["CodFactura"] + " | " +
+                    ejecutor["CodHoja"] + " | " +
+                    ejecutor["Nombre"] + " | " +
+                    ejecutor["Nit_Fac"] + " | " +
+                    ejecutor["Total"]
+                    );
+            }
+            Console.WriteLine("**_______________________**");
+            Console.ReadKey();
+            ejecutor.Close();
         }
     }
 }
